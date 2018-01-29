@@ -32,9 +32,27 @@ else if($target =='downpiece'){
 	$down=$type;
 }
 
-if($up==$center&&$up==$down){
-	$score+=100;
+//一致しているか判定後スコア加算
+function addscore($s){
+	if($up==$center&&$up==$down):
+		$score+=$s;
 }
+
+//各役の判別
+switch($up){
+	case 0:
+		addscore(50);
+		break;
+	case 1:
+		addscore(100);
+		break;
+	case 2:
+		addscore(150);
+		break;
+	case default:
+		break;
+}
+
 //ユーザー追加
 //$sql = 'update player set '+$target+'='+$type+',score='+$score' where id='+$id;
 $sql = "update player set $target=$type,score=$score where id=$id";
