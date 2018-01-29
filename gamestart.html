@@ -50,18 +50,25 @@
 
 <form>
 	<input type="text" id="kaisuu" >
-	<button type="button" id="slotStart">ガチャをひく</button>
+	<button type="button" id="cursorUp">↑</button>
+	<button type="button" id="slotStart">Push!</button>
+	<button type="button" id="cursorDown">↓</button>
 
 </form>
 
 
 
-<script>	
+<script>
+	var targetTypeArray=['uppiece','centerpiece','downpiece'];
+	var currentTarget=0;
 	var scoreDraw=document.querySelector("#score");
 	var upslot=document.querySelector("#up");
 	var centerslot=document.querySelector("#center");
 	var downslot=document.querySelector("#down");
 
+	var uptype=0;
+	var centertype=0;
+	var downtype=0;
 
 	var urlParamStr=window.location.search;
 	if(urlParamStr.slice( 0, 1 )=="?")urlParamStr=urlParamStr.slice(1);
@@ -69,12 +76,12 @@
 	
 	var userID=urlParams.get('id');
 	var canvas = document.querySelector("#canvas");
-
-	var slotbtn=document.querySelector("#slotStart");
-	slotbtn.addEventListener("click",function(){
+	
+	function pushReq(type,target){
+	
 		var pushRequest = new XMLHttpRequest();
 
-		pushRequest.open('GET', 'http://localhost/push.php?id='+userID+'&type=0&target=uppiece', false);
+		pushRequest.open('GET', 'http://localhost/push.php?id='+userID+'&type='+type+'&target='+target, false);
 		pushRequest.onload = function() {
 			if (pushRequest.status === 200) {
 					var response = pushRequest.responseText;
@@ -88,6 +95,19 @@
 			//エラー時の処理
 		};
 		pushRequest.send();		//POSTの場合は引数に文字列を渡す
+	}
+	var cursorUpbtn=document.querySelector("#cursorUp");
+	cursorUpbtn.addEventListener("click",function(){
+		pushReq(1,'uppiece');
+	 });
+	var slotbtn=document.querySelector("#slotStart");
+	slotbtn.addEventListener("click",function(){
+
+		pushReq(1,targetTypeArray[currentTarget]);
+	 });
+	var cursorDownbtn=document.querySelector("#cursorDown");
+	cursorDownbtn.addEventListener("click",function(){
+		pushReq(1,'downpiece');
 	 });
 	
 	var timer=60;//ゲーム時間
@@ -118,8 +138,15 @@
 		receiveRequest.send();		//POSTの場合は引数に文字列を渡す
 	}
 	
-	
 	setInterval("check()",1000);
+	
+	function update(){
+	
+	
+	}
+	
+	
+	setInterval("update()",1000);
 </script>
 
 </body>

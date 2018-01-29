@@ -67,7 +67,7 @@
 		startRequest.open('GET', 'http://localhost/start.php', false);
 		startRequest.onload = function() {
 			if (startRequest.status === 200) {
-					var response = start.responseText;
+					var response = startRequest.responseText;
 
 					var json = JSON.parse(response);
 				
