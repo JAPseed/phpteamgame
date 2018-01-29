@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	<meta charset="utf8">
+
+	<title>Hello Ajax</title>
+
+	<style type="text/css">
+
+		#canvas{
+
+			border: 1px solid gray;
+
+			width: 300px;
+
+			height: 250px;
+
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+
+
+<!-- 通信結果をここに表示 -->
+
+<div id="canvas">
+	<p>自分</p>
+	<p id="score">0</p>
+	<p id="up">0</p>
+	<p id="center">0</p>
+	<p id="down">0</p>
+	
+	<p>相手</p>
+	<p id="enemyscore">0</p>
+	<p id="enemyup">0</p>
+	<p id="enemycenter">0</p>
+	<p id="enemydown">0</p>
+
+</div>
+
+
+
+<form>
+	<input type="text" id="kaisuu" >
+	<button type="button" id="slotStart">ガチャをひく</button>
+
+</form>
+
+
+
+<script>	
+	var scoreDraw=document.querySelector("#score");
+	var upslot=document.querySelector("#up");
+	var centerslot=document.querySelector("#center");
+	var downslot=document.querySelector("#down");
+
+
+	var urlParamStr=window.location.search;
+	if(urlParamStr.slice( 0, 1 )=="?")urlParamStr=urlParamStr.slice(1);
+	var urlParams = new URLSearchParams(urlParamStr);
+	
+	var userID=urlParams.get('id');
+	var canvas = document.querySelector("#canvas");
+
+	var slotbtn=document.querySelector("#slotStart");
+	slotbtn.addEventListener("click",function(){
+		var pushRequest = new XMLHttpRequest();
+
+		pushRequest.open('GET', 'http://localhost/push.php?id='+userID+'&type=0&target=uppiece', false);
+		pushRequest.onload = function() {
+			if (pushRequest.status === 200) {
+					var response = pushRequest.responseText;
+
+					var json = JSON.parse(response);
+					
+					scoreDraw.innerHTML=json;
+				}
+		}
+		pushRequest.onerror = function() {
+			//エラー時の処理
+		};
+		pushRequest.send();		//POSTの場合は引数に文字列を渡す
+	 });
+	
+	var timer=60;//ゲーム時間
+	function check(){
+		timer=timer-1;
+		if(timer<=0){
+			window.location.href='result.html';
+		}
+		
+		var receiveRequest = new XMLHttpRequest();
+
+		receiveRequest.open('GET', 'http://localhost/receive.php?id='+userID, false);
+		receiveRequest.onload = function() {
+			if (receiveRequest.status === 200) {
+					var response = receiveRequest.responseText;
+
+					var json = JSON.parse(response);
+					
+					document.querySelector("#enemyscore").innerHTML=json["score"];
+					document.querySelector("#enemyup").innerHTML=json["uppiece"];
+					document.querySelector("#enemycenter").innerHTML=json["centerpiece"];
+					document.querySelector("#enemydown").innerHTML=json["downpiece"];
+				}
+		}
+		receiveRequest.onerror = function() {
+			//エラー時の処理
+		};
+		receiveRequest.send();		//POSTの場合は引数に文字列を渡す
+	}
+	
+	
+	setInterval("check()",1000);
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	<meta charset="utf8">
+
+	<title>Hello Ajax</title>
+
+	<style type="text/css">
+
+		#canvas{
+
+			border: 1px solid gray;
+
+			width: 300px;
+
+			height: 250px;
+
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+
+
+<!-- 通信結果をここに表示 -->
+
+<div id="canvas">待機中</div>
+
+
+
+
+<script>
+	var userID=0;
+	var canvas = document.querySelector("#canvas");
+
+	var loginRequest = new XMLHttpRequest();
+
+	loginRequest.open('GET', 'http://localhost/login.php', false);
+	loginRequest.onload = function() {
+		if (loginRequest.status === 200) {
+				var response = loginRequest.responseText;
+
+				var json = JSON.parse(response);
+				
+				userID=json;
+				if(userID%2==0){
+				 	window.location.href='gamestart.html?id='+userID;
+				 }
+				 
+			}
+	}
+	loginRequest.onerror = function() {
+		//エラー時の処理
+	};
+	loginRequest.send();		//POSTの場合は引数に文字列を渡す
+	
+	function idle(){
+		var startRequest = new XMLHttpRequest();
+
+		startRequest.open('GET', 'http://localhost/start.php', false);
+		startRequest.onload = function() {
+			if (startRequest.status === 200) {
+					var response = start.responseText;
+
+					var json = JSON.parse(response);
+				
+					
+					if(json%2==0){
+					 	window.location.href='gamestart.html?id='+userID;
+					 }
+				}
+		}
+		startRequest.onerror = function() {
+			//エラー時の処理
+		};
+		startRequest.send();		//POSTの場合は引数に文字列を渡す
+	
+	}
+	
+	setInterval("idle()",1000);
+
+</script>
+
+</body>
+
+</html>
