@@ -11,13 +11,70 @@
 
 	<style type="text/css">
 
-		#canvas{
+    #GameArea{
+			border: 1px solid gray;
+			width: 800px;
+
+			height: 550px;
+    }
+
+		#P1Area{
+			padding-left: 450px;
+			padding-top: 25px;
+			position:absolute;
+			top: 9px;
+		}
+
+
+		#P1Window{
 
 			border: 1px solid gray;
 
 			width: 300px;
 
-			height: 250px;
+			height: 500px;
+
+		}
+
+		#P1Input{
+			position: absolute;
+			left: 400px;
+			top: 415px;
+		}
+		#kaisuu{
+			position: absolute;
+			width: 30px;
+			left: 10px;
+		}
+
+		#cursorUp{
+			position: absolute;
+			left: 10px;
+			top: 32px;
+		}
+		#cursorDown{
+			position: absolute;
+			left: 10px;
+			top: 64px;
+		}
+		#slotStart{
+			position: absolute;
+			top: 96px;
+		}
+
+		#P2Area{
+			padding-left: 50px;
+			padding-top: 25px;
+			position:absolute;
+		}
+
+		#P2Window{
+
+			border: 1px solid gray;
+
+			width: 300px;
+
+			height: 500px;
 
 		}
 
@@ -30,31 +87,36 @@
 
 
 <!-- 通信結果をここに表示 -->
+<div id="GameArea">
 
-<div id="canvas">
-	<p>自分</p>
-	<p id="score">0</p>
-	<p id="up">0</p>
-	<p id="center">0</p>
-	<p id="down">0</p>
-	
-	<p>相手</p>
-	<p id="enemyscore">0</p>
-	<p id="enemyup">0</p>
-	<p id="enemycenter">0</p>
-	<p id="enemydown">0</p>
+	<div id="P2Area">
+		<div id="P2Window">
+			 <p>Player2</p>
+			 <p id="enemyscore">0</p>
+			 <p id="enemyup">0</p>
+			 <p id="enemycenter">0</p>
+			 <p id="enemydown">0</p>
+		</div>
+	</div>
+
+	<div id="P1Area">
+		<div id="P1Window">
+			 <p>Player1</p>
+			 <p id="score">0</p>
+			 <p id="up">0</p>
+			 <p id="center">0</p>
+			 <p id="down">0</p>
+	 </div>
+	</div>
+
+	<form id="P1Input">
+		<input type="text" id="kaisuu" >
+		<button type="button" id="cursorUp">↑</button>
+		<button type="button" id="cursorDown">↓</button>
+		<button type="button" id="slotStart">Push!</button>
+	</form>
 
 </div>
-
-
-
-<form>
-	<input type="text" id="kaisuu" >
-	<button type="button" id="cursorUp">↑</button>
-	<button type="button" id="slotStart">Push!</button>
-	<button type="button" id="cursorDown">↓</button>
-
-</form>
 
 
 
@@ -73,12 +135,12 @@
 	var urlParamStr=window.location.search;
 	if(urlParamStr.slice( 0, 1 )=="?")urlParamStr=urlParamStr.slice(1);
 	var urlParams = new URLSearchParams(urlParamStr);
-	
+
 	var userID=urlParams.get('id');
 	var canvas = document.querySelector("#canvas");
-	
+
 	function pushReq(type,target){
-	
+
 		var pushRequest = new XMLHttpRequest();
 
 		pushRequest.open('GET', 'http://localhost/push.php?id='+userID+'&type='+type+'&target='+target, false);
@@ -87,7 +149,7 @@
 					var response = pushRequest.responseText;
 
 					var json = JSON.parse(response);
-					
+
 					scoreDraw.innerHTML=json;
 				}
 		}
@@ -109,14 +171,14 @@
 	cursorDownbtn.addEventListener("click",function(){
 		pushReq(1,'downpiece');
 	 });
-	
+
 	var timer=60;//ゲーム時間
 	function check(){
 		timer=timer-1;
 		if(timer<=0){
 			window.location.href='result.html';
 		}
-		
+
 		var receiveRequest = new XMLHttpRequest();
 
 		receiveRequest.open('GET', 'http://localhost/receive.php?id='+userID, false);
@@ -125,7 +187,7 @@
 					var response = receiveRequest.responseText;
 
 					var json = JSON.parse(response);
-					
+
 					document.querySelector("#enemyscore").innerHTML=json["score"];
 					document.querySelector("#enemyup").innerHTML=json["uppiece"];
 					document.querySelector("#enemycenter").innerHTML=json["centerpiece"];
@@ -137,15 +199,15 @@
 		};
 		receiveRequest.send();		//POSTの場合は引数に文字列を渡す
 	}
-	
+
 	setInterval("check()",1000);
-	
+
 	function update(){
-	
-	
+
+
 	}
-	
-	
+
+
 	setInterval("update()",1000);
 </script>
 
