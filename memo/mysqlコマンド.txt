@@ -1,0 +1,190 @@
+基本的にはDB名には半角英数を利用する事
+
+コマンドの最後に;をつけなければ終わったとみなされず、次の行に続けてコマンドを書く(改行する)事が出来る
+
+型指定子
+int
+varchar(バイト数1～255)
+datetime//年月日,時分秒全てを保存する型
+
+文字列を使う場合は''で囲う
+
+条件式における=の数は1つ
+・等式、不等式は< <= = => >
+条件式を繋げる場合、またはならor,かつならand
+in(対象1,対象2･･･)//複数要素のorでの条件検索を一括で行う
+between 最小 and 最大//最小以上最大以下の値を取ってくる
+否定は条件の直前にnot
+
+含んでいるかの検索(部分一致)はlike文字列内でワイルドカードを使う
+like'%検索文字列%'
+'%文字列%'とかくと、文字列中のどこかに指定文字列があるかを調べられる、前、後ろどちらかのみで前方、後方一致検索にも使える
+
+SQLにおけるワイルドカードは%
+
+count(*)//同値要素がいくつあるかを調べる
+max(対象カラム)//最大値を調べる
+avg(対象カラム)//平均値を調べる
+sum(対象カラム)//合計値を調べる
+
+
+\cで、SQL文をキャンセル出来る(記述を間違えたまま文章を改行してしまった場合等に使う)
+----------------------------------------------------------------
+mysql{
+mysql --version//バージョン情報を表示、サーバーバージョンが右、クライアントバージョンが左
+
+mysql -u root -p //ここでのrootはLinuxのrootではなく、mySQL側のユーザー名のrootである(MySQLには独自のユーザー管理が存在する、サービス毎にユーザーを作成するのが一般的、ユーザーにパスワードが設定されている場合は、-pでパスワードを入力してあげる必要がある)
+}
+
+・エクセルデータをデータベースに取り込む方法
+テーブル名と同じファイル名,ファイル形式はcsvにする
+文字コードはUnicode,区切り記号は{タブ}で保存する
+1行目のカラム名を消しておく
+項目名に合わせて型を設定したテーブルを作成する
+Terminal側からmysqlimportコマンドを使う
+
+mysqlimport -u ユーザー名 -p --local データベース名 ファイルパス
+例)mysqlimport -u root -p --local rpgdb Desktop/Monster.csv
+--local//ローカルのファイルを利用する宣言
+
+
+mysql -u root -p < sqlファイル名.sql//.sqlファイルを読み込む
+
+-------------------------------------------------------------
+
+ENGINE//テーブルの保存形式を指定(MySQL限定機能)
+・InnoDB//デフォルト、必須機能が一通り入っている(最終的にデータをファイルとして保存してくれる)
+CHARSET//文字コードの指定(デフォルトはutf8)
+
+primary key//指定要素をキーにする(createの最後に書く)
+・複数のprimary keyを指定する事が可能(個人を特定するのに複数のkeyが必要な場合にこれを使う)->2情報が重複したらエラー(片方の重複は許容される)
+
+-------------------------------------------------------------
+内部結合//両テーブルに存在するレコードを抽出する(記述順に制限がない)
+
+SELECT時、FROM句に使用するテーブルを全て指定し、WHERE句でカラムの接続を指定してあげる(=で繋ぐ)
+・複数テーブルの結合が可能
+
+FROM句で結合する場合は、FROM句内でjoinを記述する
+FROM テーブル1 join テーブル2 on キー1=キー2
+
+同じカラム名が2テーブルに存在する場合、何方のテーブルのカラムなのかを記述する必要がある
+エイリアス(FROM時点で名前を付けて、置き換えをする)
+例)SELECT B.register_date FROM User A,Save B WHERE A.id =B.user_id;
+FROM句でも宣言する事が可能、join時に書く
+
+外部結合//片方テーブルに存在するレコード全てを抽出する(右側基準or左側基準を指定する=記述順が影響する)
+・基準でないテーブルに定義が無くても、NULLとして抽出される
+-------------------------------------------------------------
+show databases;//現在中にあるデータベースの一覧が表示される、MySQLには管理用テーブル(内部情報用データベース)も存在するため、ここも一覧に表示される
+
+create database データベース名;//データベースの作成
+
+use データベース名;//操作を行うDBを指定する
+
+//テーブルの作成
+create table テーブル名(
+カラム名 型,
+カラム名 型
+･･･
+);
+
+例)
+create table Monster(
+id int,
+name varchar(バイト数)
+);
+``//カラム名をこれで囲むと、カラム名の文字列に特殊文字列が入っていてもなんとかしてくれる
+カラム名 int AUTO INCREMENT//intに勝手に値を割り振ってくれる
+
+show tables;//テーブル一覧の表示
+
+desc テーブル名;//指定テーブルの各項目を確認できる
+
+
+//データを挿入する(左から右へ全て定義する場合のみ此方)
+insert into テーブル名 values(要素1,要素2･･･);
+例)
+insert into Monster
+values(1,'dragon');
+
+//特定データのみを入力して挿入する
+insert into テーブル名(カラム名1,カラム名2･･･) values(要素1,要素2･･･);
+
+例)
+insert into Monster(name,id)
+values('dragon',now());
+
+now()//実行時点での時間を取得する
+insert into Monster(name,id)
+
+//データを一括挿入する(左から右へ全て定義する場合のみ此方)
+insert into テーブル名 values(要素1,要素2･･･),(要素1,要素2･･･),･･･;
+
+例)
+insert into Monster
+values(1,'dragon'),(2,'dra'),(3,'gon');
+
+select 取り出したい要素1,取り出したい要素2･･･ from テーブル名;//指定要素を表示する
+select * from テーブル名;//全ての要素を見る
+
+drop database データベース名;//データベースの削除
+drop table テーブル名;//テーブルの削除
+
+exit//SQLクライアントを終了する
+\q//SQLクライアントを終了する(exitと同じ意味)
+
+
+WHERE句//条件を設定する
+select 要素 from テーブル where 条件式;
+select * from Monster where hp>100;
+select * from Monster where id=1 or id=2;
+select * from Monster where id in(1,3,6,8,20);
+select * from Monster where name like '%スライム%';
+select * from Monster where name not like '%スライム%';
+select * from Monster where between 10 and 100;
+
+ORDER BY//並び替え、デフォルトは昇順(ascをつけても良い),降順ならdescをつける
+select * from Monster order by 列名;
+select * from Monster order by hp;
+select * from Monster order by hp desc;
+
+ソート条件を複数使う場合は
+select * from Monster order by 第一条件,第二条件 ･･･;
+select * from Monster order by hp desc,mp desc;
+
+GROUP BY//同値のレコードをまとめる(同じ項目は1つになる)
+select mp from Monster group by まとめる項目;
+select mp from Monster group by mp;
+各値が何件ずつあったかを知りたかったらcount(*)を使う
+select mp count(*) from Monster group by mp;
+//レコード数を調べたい場合はグループ指定をしない
+select mp count(*) from Monster;
+UPDATE//更新を行う
+//全てのレコードを一括で更新する
+UPDATE テーブル SET カラム=データ;
+UPDATE Monster SET mp=10;
+//特定レコードを指定して更新する
+UPDATE テーブル SET カラム=データ where 条件式;
+UPDATE Monster SET mp=10 where id>=10;
+//複数カラムを一括変更する
+UPDATE テーブル SET カラム1=データ1,カラム2=データ2 where 条件式;
+UPDATE Monster SET hp=hp+20,mp=10 where id>=10;(演算も可能)
+
+
+DELETE//データを削除する
+//特定レコードを削除する
+delete from テーブル where 条件式;
+delete from Monster where name like '%スライム%';
+
+create index インデックス名 on テーブル名(カラム名);
+//インデックスを作成する、インデックス名は自由
+
+START TRANSACTION;//トランザクションを有効化する
+ROLLBACK;//START TRANSACTIONを行った地点までデータ状況を戻す
+COMMIT;//START TRANSACTION状況下で更新を適用する(これをしないと終了時に自動ROLLBACKされる)
+
+LOAD DATA LOCAL INFILE "ファイルパス" INTO TABLE テーブル名 FIELDS TERMINATED BY "区切り文字" LINES TERMINATED BY "改行文字";
+LOAD DATA LOCAL INFILE "Desktop/file.csv" INTO TABLE test FIELDS TERMINATED BY "," LINES TERMINATED BY "\n\r";
+csvデータのインポート
+
