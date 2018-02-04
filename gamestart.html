@@ -17,8 +17,11 @@
 
 			height: 550px;
     }
-
-		#P1Area{
+	#GameArea img{
+		max-height:100px;
+		display:block;
+	}
+		#P2Area{
 			padding-left: 450px;
 			padding-top: 25px;
 			position:absolute;
@@ -26,7 +29,7 @@
 		}
 
 
-		#P1Window{
+		#P2Window{
 
 			border: 1px solid gray;
 
@@ -40,11 +43,6 @@
 			position: absolute;
 			left: 400px;
 			top: 415px;
-		}
-		#kaisuu{
-			position: absolute;
-			width: 30px;
-			left: 10px;
 		}
 
 		#cursorUp{
@@ -62,13 +60,13 @@
 			top: 96px;
 		}
 
-		#P2Area{
+		#P1Area{
 			padding-left: 50px;
 			padding-top: 25px;
 			position:absolute;
 		}
 
-		#P2Window{
+		#P1Window{
 
 			border: 1px solid gray;
 
@@ -77,7 +75,16 @@
 			height: 500px;
 
 		}
-
+		
+		.target{
+			filter:brightness(100%);
+		}
+		.nontarget{
+			filter:brightness(50%);
+		}
+		#enemyup{filter:brightness(100%);}
+		#enemycenter{filter:brightness(100%);}
+		#enemydown{filter:brightness(100%);}
 	</style>
 
 </head>
@@ -89,28 +96,25 @@
 <!-- 通信結果をここに表示 -->
 <div id="GameArea">
 
-	<div id="P2Area">
-		<div id="P2Window">
-			 <p>Player2</p>
-			 <p id="enemyscore">0</p>
-			 <p id="enemyup">0</p>
-			 <p id="enemycenter">0</p>
-			 <p id="enemydown">0</p>
-		</div>
-	</div>
-
 	<div id="P1Area">
 		<div id="P1Window">
 			 <p>Player1</p>
 			 <p id="score">0</p>
-			 <p id="up">0</p>
-			 <p id="center">0</p>
-			 <p id="down">0</p>
+			 <img id="up" class="target">
+			 <img id="center" class="nontarget">
+			 <img id="down" class="nontarget">
 	 </div>
 	</div>
-
+	<div id="P2Area">
+		<div id="P2Window">
+			 <p>Player2</p>
+			 <p id="enemyscore">0</p>
+			 <img id="enemyup" src="teamImage/sweets_chocolate_cake_sachertorte.png">
+			 <img id="enemycenter" src="teamImage/sweets_chocolate_cake_sachertorte.png">
+			 <img id="enemydown" src="teamImage/sweets_chocolate_cake_sachertorte.png">
+		</div>
+	</div>
 	<form id="P1Input">
-		<input type="text" id="kaisuu" >
 		<button type="button" id="cursorUp">↑</button>
 		<button type="button" id="cursorDown">↓</button>
 		<button type="button" id="slotStart">Push!</button>
@@ -121,16 +125,31 @@
 
 
 <script>
+	var num_sprite_list=["sweets_chocolate_cake_sachertorte.png",
+							"sweets_colorful_cupcake_set.png",
+							"sweets_funnelcake.png"];
+	
 	var targetTypeArray=['uppiece','centerpiece','downpiece'];
-	var currentTarget=0;
+	var currentTarget=0;//ルーレット対象
+	//自身枠
 	var scoreDraw=document.querySelector("#score");
 	var upslot=document.querySelector("#up");
 	var centerslot=document.querySelector("#center");
 	var downslot=document.querySelector("#down");
-
+	//敵枠
+	var enemyupslot=document.querySelector("#enemyup");
+	var enemycenterslot=document.querySelector("#enemycenter");
+	var enemydownslot=document.querySelector("#enemydown");
+	var isSlot=false;//スロット中か
 	var uptype=0;
 	var centertype=0;
 	var downtype=0;
+	
+	
+	upslot.src="teamImage/"+num_sprite_list[uptype];
+	centerslot.src="teamImage/"+num_sprite_list[centertype];
+	downslot.src="teamImage/"+num_sprite_list[downtype];
+	
 
 	var urlParamStr=window.location.search;
 	if(urlParamStr.slice( 0, 1 )=="?")urlParamStr=urlParamStr.slice(1);
@@ -158,19 +177,84 @@
 		};
 		pushRequest.send();		//POSTの場合は引数に文字列を渡す
 	}
-	var cursorUpbtn=document.querySelector("#cursorUp");
-	cursorUpbtn.addEventListener("click",function(){
-		pushReq(1,'uppiece');
-	 });
+
 	var slotbtn=document.querySelector("#slotStart");
 	slotbtn.addEventListener("click",function(){
-
-		pushReq(1,targetTypeArray[currentTarget]);
+		if(isSlot){
+			isSlot=false;//回転終了
+			var pushType=0;
+			switch(currentTarget){
+				case 0://上スロット回転
+					pushType=uptype;
+					break;
+				case 1://中スロット回転
+					pushType=centertype;
+					break;				
+				case 2://下スロット回転
+					pushType=downtype;
+					break;
+				default:
+				break;
+			}
+			pushReq(pushType,targetTypeArray[currentTarget]);
+		}
+		else{
+			isSlot=true;//回転開始
+			switch(currentTarget){
+				case 0:{//上スロット回転開始
+					
+					break;
+				}
+				case 1:{//中スロット回転開始
+					break;
+				}
+				case 2:{//下スロット回転開始
+					break;
+				}
+				default:
+				break;
+			}
+		}
 	 });
+	 
+	 function changeTarget(target){//表示上の対象変更
+	 	switch(target){
+	 		case 0:{
+	 			upslot.className="target";
+				centerslot.className="nontarget";
+				downslot.className="nontarget";
+
+	 			break;
+	 		}
+	 		case 1:{	 			
+	 			upslot.className="nontarget";
+				centerslot.className="target";
+				downslot.className="nontarget";
+	 			break;
+	 		}
+	 		case 2:{
+	 			upslot.className="nontarget";
+				centerslot.className="nontarget";
+				downslot.className="target";
+	 			break;
+	 		}
+	 		default:
+	 		break;
+	 	}
+	 }
+	 //ターゲットの上下移動
+	var cursorUpbtn=document.querySelector("#cursorUp");
+	cursorUpbtn.addEventListener("click",function(){
+		if(isSlot)return;
+		currentTarget=(currentTarget-1+targetTypeArray.length)%targetTypeArray.length;//カウントを下げる
+		changeTarget(currentTarget);
+	});
 	var cursorDownbtn=document.querySelector("#cursorDown");
 	cursorDownbtn.addEventListener("click",function(){
-		pushReq(1,'downpiece');
-	 });
+		if(isSlot)return;
+		currentTarget=(currentTarget+1)%targetTypeArray.length;//カウントを上げる
+		changeTarget(currentTarget);
+	});
 
 	var timer=60;//ゲーム時間
 	function check(){
@@ -189,9 +273,9 @@
 					var json = JSON.parse(response);
 
 					document.querySelector("#enemyscore").innerHTML=json["score"];
-					document.querySelector("#enemyup").innerHTML=json["uppiece"];
-					document.querySelector("#enemycenter").innerHTML=json["centerpiece"];
-					document.querySelector("#enemydown").innerHTML=json["downpiece"];
+					document.querySelector("#enemyup").src="teamImage/"+num_sprite_list[parseInt(json["uppiece"])];
+					document.querySelector("#enemycenter").src="teamImage/"+num_sprite_list[parseInt(json["centerpiece"])];
+					document.querySelector("#enemydown").src="teamImage/"+num_sprite_list[parseInt(json["downpiece"])];
 				}
 		}
 		receiveRequest.onerror = function() {
@@ -203,12 +287,31 @@
 	setInterval("check()",1000);
 
 	function update(){
-
-
+		//回転中のみ
+		if(!isSlot)return;
+		switch(currentTarget){
+			case 0:{//上スロット回転	
+				uptype=(uptype+1)%num_sprite_list.length;
+				upslot.src="teamImage/"+num_sprite_list[uptype];
+				break;
+			}
+			case 1:{//中スロット回転
+				centertype=(centertype+1)%num_sprite_list.length;
+				centerslot.src="teamImage/"+num_sprite_list[centertype];
+				break;
+			}
+			case 2:{//下スロット回転
+				downtype=(downtype+1)%num_sprite_list.length;
+				downslot.src="teamImage/"+num_sprite_list[downtype];
+				break;
+			}
+			default:
+			break;
+		}
 	}
 
 
-	setInterval("update()",1000);
+	setInterval("update()",100);
 </script>
 
 </body>
