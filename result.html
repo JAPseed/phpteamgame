@@ -20,9 +20,10 @@
 			height: 250px;
 
 		}
-		p{
-			float:left;
+		.score p{
+			display:inline-block;
 		}
+		
 	</style>
 
 </head>
@@ -34,35 +35,59 @@
 <!-- 通信結果をここに表示 -->
 
 <div id="canvas">
-	<p>あなたのスコア:</p>
-	<p>2</p>
-
+	<div class="score">
+		<p>あなたのスコア:</p>
+		<p id="myscore">0</p>
+	</div>
+	<br>
+	<div class="score">
+		<p>あいてのスコア:</p>
+		<p id="enemyscore">0</p>
+	</div>
+	<p id="result"></p>
+	<form action="title.html">
+   		<button>タイトルへ</button>
+  	</form>
 </div>
+	
 
 
+<script>	var urlParamStr=window.location.search;
+	if(urlParamStr.slice( 0, 1 )=="?")urlParamStr=urlParamStr.slice(1);
+	var urlParams = new URLSearchParams(urlParamStr);
 
+	var userID=urlParams.get('id');
+	var myscore = document.querySelector("#myscore");
+	var enemyscore = document.querySelector("#enemyscore");
+	var buttleResult = document.querySelector("#result");
 
-<script>
-	var userID=0;
-	var canvas = document.querySelector("#canvas");
+	var resultRequest = new XMLHttpRequest();
 
-	var loginRequest = new XMLHttpRequest();
-
-	loginRequest.open('GET', 'http://localhost/login.php', false);
-	loginRequest.onload = function() {
-		if (loginRequest.status === 200) {
-				var response = loginRequest.responseText;
+	resultRequest.open('GET', 'http://localhost/result.php?id='+userID, false);
+	resultRequest.onload = function() {
+		if (resultRequest.status === 200) {
+				var response = resultRequest.responseText;
 
 				var json = JSON.parse(response);
 				
-				userID=json;
-				 
+				myscore.innerHTML=json[0];
+				enemyscore.innerHTML=json[1];
+				if(json[0]>json[1]){
+					buttleResult.innerHTML="勝ち";
+				}				
+				else if(json[0]<json[1]){
+					buttleResult.innerHTML="負け";
+				}
+				else{
+					buttleResult.innerHTML="引き分け";
+				}
+				
 			}
 	}
-	loginRequest.onerror = function() {
+	resultRequest.onerror = function() {
 		//エラー時の処理
 	};
-	loginRequest.send();		//POSTの場合は引数に文字列を渡す
+	resultRequest.send();		//POSTの場合は引数に文字列を渡す
 	
 
 
