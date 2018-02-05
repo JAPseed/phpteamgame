@@ -12,15 +12,22 @@
 	<style type="text/css">
 
 		#canvas{
+		
+			background-image:url(teamImage/test3.png);
+			background-size:cover;
 			border: 1px solid gray;
+			text-align:center;
 			width: 1100px;
-
+			
 			height: 650px;
-
 		}
-
+		#loading{
+		position:absolute;
+		left:500px;
+		top:300px;
+		}
 	</style>
-
+	
 </head>
 
 <body>
@@ -29,11 +36,13 @@
 
 <!-- 通信結果をここに表示 -->
 
-<div id="canvas">待機中</div>
+
+<div id="canvas">
+	<img src="teamImage/loadinglogo.png" id="loading">
+	
+</div>
 
 <audio id="bgm_main" src="teammusic/title.wav" autoplay loop></audio>
-
-
 
 <script>
 	var userID=0;
@@ -85,6 +94,17 @@
 	
 	setInterval("idle()",1000);
 
+	var loading = document.querySelector("#loading");
+	
+	var sinCount=1.2;
+	function update(){
+		sinCount=sinCount+0.032;
+		var currentSin=Math.sin(sinCount)*100.0;
+		currentSin=Math.abs(currentSin);
+		
+		loading.style="filter:brightness("+currentSin+"%)";
+	}
+	setInterval("update()",30);
 </script>
 
 </body>

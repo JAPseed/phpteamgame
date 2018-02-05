@@ -86,6 +86,26 @@
 		#enemyup{filter:brightness(100%);}
 		#enemycenter{filter:brightness(100%);}
 		#enemydown{filter:brightness(100%);}
+		
+		#slotStart{
+			background-image:url(teamImage/push.png);
+			background-size:cover;
+			width:80px;
+			height:50px;
+		}
+		#cursorUp{
+			background-image:url(teamImage/arrowup.png);
+			background-size:contain;
+			width:30px;
+			height:30px;
+		}		
+		#cursorDown{
+			background-image:url(teamImage/arrowdown.png);
+			background-size:contain;
+			width:30px;
+			height:30px;
+		}
+
 	</style>
 
 </head>
@@ -117,10 +137,9 @@
 		</div>
 	</div>
 	<form id="P1Input">
-		<button type="button" id="cursorUp">↑</button>
-		<button type="button" id="cursorDown">↓</button>
-		<input type=”image” src="teamImage/push.png" id="slotStart">
-		<button type="button" id="slotStart">Push!</button>
+		<button type="button" id="cursorUp"></button>
+		<button type="button" id="cursorDown"></button>
+		<button type="button" id="slotStart"></button>
 	</form>
 
 </div>
