@@ -5,36 +5,36 @@
 	<title>チョコスロ</title>
 	<link rel="stylesheet" href="style.css">
 	<style>
-		h1{
-			background-color:rgb(255,255,255);
-		}
 		#novelwindow{
 			border: 1px solid gray;
 			width: 1100px;
 
 			height: 650px;
 			text-align:center;
-			background-image:url(image/earth.jpg);
+			background-image:url(teamImage/titletest1.png);
 			background-contain;
 		}
 		#novelwindow > h1{
-			margin-top:100px;
+			margin-top:250px;
+			margin-left: 100px;
 			font-size:32pt;
 		}
-		#novelwindow > form > button{
-			width:200px;
-			height: 60px;
+		#novelwindow > form > input{
 			margin-bottom:10px;
+			margin-left: 100px;
 		}
 	</style>
 </head>
 <body>
   <section id="novelwindow">
-  <h1>チョコスロ</h1>
-  
-  <a href="mygame.html"><img src="teamImage/Start.png"></a>
+  <h1><img src="teamImage/logo.png"></h1>
+
+<form action="mygame.html">
+	<input type="image" src="teamImage/Start.png">
+</form>
+  <!-- <a href="mygame.html"><img src="teamImage/Start.png"></a> -->
   </section>
-  
+
 <audio id="bgm_main" src="teammusic/title.wav" autoplay loop></audio>
 </body>
 <html>
