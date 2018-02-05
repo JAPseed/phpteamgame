@@ -122,9 +122,16 @@
 
 </div>
 
+<audio id="se_changetarget" src="teamSe/changetarget.wav" preload></audio>
+<audio id="se_turnslot" src="teamSe/turnslot.wav" preload loop></audio>
+<audio id="se_stopslot" src="teamSe/stopslot.wav" preload></audio>
 
 
 <script>
+	var se_ChangeTarget=document.querySelector("#se_changetarget");//SE鳴らす
+	var se_TurnSlot=document.querySelector("#se_turnslot");//SE鳴らす
+	var se_StopSlot=document.querySelector("#se_stopslot");//SE鳴らす
+	
 	var num_sprite_list=["sweets_chocolate_cake_sachertorte.png",
 							"sweets_colorful_cupcake_set.png",
 							"sweets_funnelcake.png"];
@@ -182,6 +189,10 @@
 	slotbtn.addEventListener("click",function(){
 		if(isSlot){
 			isSlot=false;//回転終了
+			se_TurnSlot.pause();
+			audio.currentTime = 0;
+			se_StopSlot.currentTime=0;
+			se_StopSlot.play();
 			var pushType=0;
 			switch(currentTarget){
 				case 0://上スロット回転
@@ -200,24 +211,13 @@
 		}
 		else{
 			isSlot=true;//回転開始
-			switch(currentTarget){
-				case 0:{//上スロット回転開始
-					
-					break;
-				}
-				case 1:{//中スロット回転開始
-					break;
-				}
-				case 2:{//下スロット回転開始
-					break;
-				}
-				default:
-				break;
-			}
+			se_TurnSlot.play();//SE鳴らす
 		}
 	 });
 	 
 	 function changeTarget(target){//表示上の対象変更
+	 	se_ChangeTarget.currentTime=0;
+	 	se_ChangeTarget.play();
 	 	switch(target){
 	 		case 0:{
 	 			upslot.className="target";
