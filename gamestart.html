@@ -122,6 +122,7 @@
 
 </div>
 
+<audio id="bgm_main" src="teammusic/bgm.wav" autoplay loop></audio>
 <audio id="se_changetarget" src="teamSe/changetarget.wav" preload></audio>
 <audio id="se_turnslot" src="teamSe/turnslot.wav" preload loop></audio>
 <audio id="se_stopslot" src="teamSe/stopslot.wav" preload></audio>
@@ -190,7 +191,7 @@
 		if(isSlot){
 			isSlot=false;//回転終了
 			se_TurnSlot.pause();
-			audio.currentTime = 0;
+			se_TurnSlot.currentTime = 0;
 			se_StopSlot.currentTime=0;
 			se_StopSlot.play();
 			var pushType=0;
