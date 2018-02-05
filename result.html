@@ -18,9 +18,14 @@
 			height: 650px;
 			
 			text-align:center;
+			background-image: url(teamImage/test3.png);
+			background-size: cover;
 		}
 		.score p{
 			display:inline-block;
+		}
+		#canvas > #resultlogo{
+			margin-top:175px;
 		}
 		
 	</style>
@@ -34,9 +39,10 @@
 <!-- 通信結果をここに表示 -->
 
 <div id="canvas">
-	<h3>リザルト</h3>
-	
-	<h1 id="result"></h1>
+	<img id="resultlogo" src="teamImage/resultlogo.png">
+	<div class="resultImage">
+		<img id="result">
+	</div>
 	<div class="score">
 		<p>あなたのスコア:</p>
 		<p id="myscore">0</p>
@@ -75,13 +81,13 @@
 				myscore.innerHTML=json[0];
 				enemyscore.innerHTML=json[1];
 				if(json[0]>json[1]){
-					buttleResult.innerHTML="勝ち";
+					buttleResult.src="teamImage/resultlogo_V.png";
 				}				
 				else if(json[0]<json[1]){
-					buttleResult.innerHTML="負け";
+					buttleResult.src="teamImage/resultlogo_L.png";
 				}
 				else{
-					buttleResult.innerHTML="引き分け";
+					buttleResult.src="teamImage/resultlogo_D.png";
 				}
 				
 			}
