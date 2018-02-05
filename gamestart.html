@@ -13,24 +13,25 @@
 
     #GameArea{
 			border: 1px solid gray;
-			width: 800px;
-
-			height: 550px;
+			width: 1100px;
+			background-image:url(teamImage/test3.png);
+			background-size:cover;
+			height: 650px;
     }
 	#GameArea img{
 		max-height:100px;
 		display:block;
 	}
 		#P2Area{
-			padding-left: 450px;
-			padding-top: 25px;
+			padding-left: 600px;
+			padding-top: 75px;
 			position:absolute;
 			top: 9px;
 		}
 
 
 		#P2Window{
-
+			background-color:rgba(255,255,255,0.5);
 			border: 1px solid gray;
 
 			width: 300px;
@@ -41,7 +42,7 @@
 
 		#P1Input{
 			position: absolute;
-			left: 400px;
+			left: 475px;
 			top: 415px;
 		}
 
@@ -61,13 +62,13 @@
 		}
 
 		#P1Area{
-			padding-left: 50px;
-			padding-top: 25px;
+			padding-left: 150px;
+			padding-top: 75px;
 			position:absolute;
 		}
 
 		#P1Window{
-
+			background-color:rgba(255,255,255,0.5);
 			border: 1px solid gray;
 
 			width: 300px;
@@ -98,16 +99,17 @@
 
 	<div id="P1Area">
 		<div id="P1Window">
-			 <p>Player1</p>
+			 <p>あなた</p>
 			 <p id="score">0</p>
 			 <img id="up" class="target">
 			 <img id="center" class="nontarget">
 			 <img id="down" class="nontarget">
+			 <img id="cursor" src="teamImage/arrow.png" style=" position:absolute;top:200px;left:300px; max-width:50px;">
 	 </div>
 	</div>
 	<div id="P2Area">
 		<div id="P2Window">
-			 <p>Player2</p>
+			 <p>あいて</p>
 			 <p id="enemyscore">0</p>
 			 <img id="enemyup" src="teamImage/sweets_chocolate_cake_sachertorte.png">
 			 <img id="enemycenter" src="teamImage/sweets_chocolate_cake_sachertorte.png">
@@ -132,7 +134,15 @@
 	var se_ChangeTarget=document.querySelector("#se_changetarget");//SE鳴らす
 	var se_TurnSlot=document.querySelector("#se_turnslot");//SE鳴らす
 	var se_StopSlot=document.querySelector("#se_stopslot");//SE鳴らす
+
+	var cursor=document.querySelector("#cursor");
 	
+	//カーソルの位置リスト
+	var cursor_style_list=[
+	"position:absolute;top:200px;left:300px;; max-width:50px;",
+	"position:absolute;top:300px;left:300px; max-width:50px;",
+	"position:absolute;top:400px;left:300px; max-width:50px;"
+	];
 	var num_sprite_list=["sweets_chocolate_cake_sachertorte.png",
 							"sweets_colorful_cupcake_set.png",
 							"sweets_funnelcake.png"];
@@ -219,24 +229,27 @@
 	 function changeTarget(target){//表示上の対象変更
 	 	se_ChangeTarget.currentTime=0;
 	 	se_ChangeTarget.play();
+	 	
 	 	switch(target){
 	 		case 0:{
 	 			upslot.className="target";
 				centerslot.className="nontarget";
 				downslot.className="nontarget";
-
+				cursor.style=cursor_style_list[0];
 	 			break;
 	 		}
 	 		case 1:{	 			
 	 			upslot.className="nontarget";
 				centerslot.className="target";
 				downslot.className="nontarget";
+				cursor.style=cursor_style_list[1];
 	 			break;
 	 		}
 	 		case 2:{
 	 			upslot.className="nontarget";
 				centerslot.className="nontarget";
 				downslot.className="target";
+				cursor.style=cursor_style_list[2];
 	 			break;
 	 		}
 	 		default:

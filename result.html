@@ -13,8 +13,11 @@
 
 		#canvas{
 			border: 1px solid gray;
-			width: 800px;
-			height: 550px;
+			width: 1100px;
+
+			height: 650px;
+			
+			text-align:center;
 		}
 		.score p{
 			display:inline-block;
@@ -31,6 +34,9 @@
 <!-- 通信結果をここに表示 -->
 
 <div id="canvas">
+	<h1>リザルト</h1>
+	
+	<h3 id="result"></h3>
 	<div class="score">
 		<p>あなたのスコア:</p>
 		<p id="myscore">0</p>
@@ -40,7 +46,6 @@
 		<p>あいてのスコア:</p>
 		<p id="enemyscore">0</p>
 	</div>
-	<p id="result"></p>
 	<form action="title.html">
    		<button>タイトルへ</button>
   	</form>
