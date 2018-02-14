@@ -46,6 +46,7 @@
 	<div class="score">
 		<p>あなたのスコア:</p>
 		<p id="myscore">0</p>
+
 	</div>
 	<br>
 	<div class="score">
@@ -78,10 +79,12 @@
 				
 				myscore.innerHTML=json[0];
 				enemyscore.innerHTML=json[1];
-				if(json[0]>json[1]){
+				var myscoreInt=parseInt(json[0],10);
+				var enemyscoreInt=parseInt(json[1],10);
+				if(myscoreInt>enemyscoreInt){
 					buttleResult.src="teamImage/resultlogo_V.png";
 				}				
-				else if(json[0]<json[1]){
+				else if(myscoreInt<enemyscoreInt){
 					buttleResult.src="teamImage/resultlogo_L.png";
 				}
 				else{
