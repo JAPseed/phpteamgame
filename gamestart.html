@@ -105,7 +105,11 @@
 			width:30px;
 			height:30px;
 		}
-
+		#timetext{
+			position:absolute;
+			top:100px;
+			left:520px;
+		}
 	</style>
 
 </head>
@@ -136,6 +140,7 @@
 			 <img id="enemydown" src="teamImage/sweets_chocolate_cake_sachertorte.png">
 		</div>
 	</div>
+	<p id="timetext">60</p>
 	<form id="P1Input">
 		<button type="button" id="cursorUp"></button>
 		<button type="button" id="cursorDown"></button>
@@ -178,6 +183,8 @@
 	var enemyupslot=document.querySelector("#enemyup");
 	var enemycenterslot=document.querySelector("#enemycenter");
 	var enemydownslot=document.querySelector("#enemydown");
+	
+	var timeText=document.querySelector("#timetext");
 	var isSlot=false;//スロット中か
 	var uptype=0;
 	var centertype=0;
@@ -296,7 +303,7 @@
 		if(timer<=0){
 			window.location.href='result.html?id='+userID;
 		}
-
+		timeText.innerHTML=timer;
 		var receiveRequest = new XMLHttpRequest();
 
 		receiveRequest.open('GET', 'http://localhost/receive.php?id='+userID, false);
